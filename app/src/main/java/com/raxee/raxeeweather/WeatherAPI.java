@@ -63,7 +63,7 @@ public class WeatherAPI {
             try {
                 JSONObject data = new JSONObject(result);
 
-                weatherAPIInterface.onWeatherAPIPost(1111);
+                weatherAPIInterface.onWeatherAPIPost(data.getJSONObject("main").getDouble("temp"));
             } catch (JSONException error) {
                 error.printStackTrace();
             }

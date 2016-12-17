@@ -15,7 +15,7 @@ public class WeatherNowFragment extends Fragment implements WeatherAPI.WeatherAP
     public WeatherNowFragment() {}
 
     public void onWeatherAPIPost(double temperature) {
-        temperatureView.setText(String.valueOf(temperature));
+        temperatureView.setText(String.valueOf(temperature) + "°C");
     }
 
     @Override
