@@ -1,7 +1,10 @@
-package com.raxee.raxeeweather;
+package com.raxee.raxeeweather.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.raxee.raxeeweather.R;
+import com.raxee.raxeeweather.fragment.CurrentWeatherFragment;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -11,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.layout_weather, new WeatherNowFragment())
+                .replace(R.id.layout_weather, new CurrentWeatherFragment())
                 .commit();
 
 
