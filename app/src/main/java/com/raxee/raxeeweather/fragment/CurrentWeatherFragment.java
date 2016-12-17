@@ -18,7 +18,6 @@ public class CurrentWeatherFragment extends Fragment implements WeatherAPI.Weath
 
     private TextView dateView;
     private TextView tempView;
-    private TextView tempMinMaxView;
     private TextView pressureView;
     private TextView humidityView;
     private TextView weatherView;
@@ -27,9 +26,8 @@ public class CurrentWeatherFragment extends Fragment implements WeatherAPI.Weath
 
     public void onGetCurrentWeatherPost(WeatherData current) {
         dateView.setText(String.valueOf(current.date));
-        tempMinMaxView.setText(String.valueOf(current.minTemp) + " - " + String.valueOf(current.maxTemp) + " °C");
         tempView.setText(String.valueOf(current.temp) + " °C");
-        pressureView.setText(String.valueOf(current.pressure));
+        pressureView.setText(String.valueOf(current.pressure) + " мм.рт.ст.");
         humidityView.setText(String.valueOf(current.humidity) + " %");
         weatherView.setText(current.weather);
     }
@@ -43,7 +41,6 @@ public class CurrentWeatherFragment extends Fragment implements WeatherAPI.Weath
 
         dateView = (TextView)view.findViewById(R.id.date);
         tempView = (TextView)view.findViewById(R.id.temp);
-        tempMinMaxView = (TextView)view.findViewById(R.id.temp_min_max);
         pressureView = (TextView)view.findViewById(R.id.pressure);
         humidityView = (TextView)view.findViewById(R.id.humidity);
         weatherView = (TextView)view.findViewById(R.id.weather);

@@ -3,28 +3,27 @@ package com.raxee.raxeeweather.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class WeatherData {
     public Date date;
     public Double temp;
-    public Double minTemp;
-    public Double maxTemp;
     public Double pressure;
     public Double humidity;
     public String weather;
-    // Add more
+    // TODO: add more
 
     public WeatherData() {}
 
     public WeatherData(JSONObject data) {
         try {
-            date = new Date(data.getInt("dt"));
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(data.getLong("dt") * 1000L);
+            date = cal.getTime();
             JSONObject dataMain = data.getJSONObject("main");
             temp = dataMain.getDouble("temp");
-            minTemp = dataMain.getDouble("temp_min");
-            maxTemp = dataMain.getDouble("temp_max");
-            pressure = dataMain.getDouble("pressure");
+            pressure = dataMain.getDouble("pressure") * 0.75;
             humidity = dataMain.getDouble("humidity");
             weather = data.getJSONArray("weather").getJSONObject(0).getString("description");
         } catch (JSONException error) {
