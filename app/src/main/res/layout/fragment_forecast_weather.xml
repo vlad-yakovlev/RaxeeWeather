@@ -2,20 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.raxee.raxeeweather.fragment.CurrentWeatherFragment"
+    tools:context="com.raxee.raxeeweather.fragment.ForecastWeatherFragment"
     android:orientation="vertical"
     android:id="@+id/layout"
     android:visibility="gone">
 
     <TextView
-        android:text="Текущая погода"
+        android:text="Прогноз погоды"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
 
-    <include
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/layout_weather_item" />
+        android:id="@+id/weather_list"
+        />
 
 </LinearLayout>

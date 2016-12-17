@@ -11,9 +11,42 @@
     tools:context="com.raxee.raxeeweather.activity.MainActivity"
     android:orientation="vertical">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/layout_current_weather"
-        android:orientation="vertical" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Город"
+                android:text="Ростов-на-Дону"
+                android:id="@+id/city"
+                android:inputType="text" />
+
+            <Button
+                android:text="Применить"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/apply_city" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_current_weather"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_forecast_weather"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>
