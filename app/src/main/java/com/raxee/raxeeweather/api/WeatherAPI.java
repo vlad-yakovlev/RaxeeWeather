@@ -14,7 +14,8 @@ public class WeatherAPI {
     private WeatherAPIInterface weatherAPIInterface;
 
     public interface WeatherAPIInterface {
-        void onWeatherAPIPost(WeatherData current, WeatherData[] forecast);
+        void onGetCurrentWeatherPost(WeatherData current);
+        void onGetForecastWeatherPost(WeatherData[] forecast);
     }
 
     private WeatherAPI() {
@@ -29,7 +30,7 @@ public class WeatherAPI {
         }
     }
 
-    public void getWeather(Object object, String lat, String lon) {
+    public void getCurrentWeather(Object object, String city) {
         weatherAPIInterface = (WeatherAPIInterface)object;
 
         Uri.Builder builderCurrentWeather = new Uri.Builder();
@@ -39,12 +40,17 @@ public class WeatherAPI {
                 .appendPath("data")
                 .appendPath("2.5")
                 .appendPath("weather")
-                .appendQueryParameter("lat", lat)
-                .appendQueryParameter("lon", lon)
+                .appendQueryParameter("q", city)
                 .appendQueryParameter("units", "metric")
                 .appendQueryParameter("lang", "ru")
                 .appendQueryParameter("appid", "df27b084e5286716dee61c9f45f82a1a");
         String urlCurrentWeather = builderCurrentWeather.build().toString();
+
+        new Task().execute("current", urlCurrentWeather);
+    }
+
+    public void getForecastWeather(Object object, String city) {
+        weatherAPIInterface = (WeatherAPIInterface)object;
 
         Uri.Builder builderForecastWeather = new Uri.Builder();
         builderForecastWeather
@@ -53,14 +59,13 @@ public class WeatherAPI {
                 .appendPath("data")
                 .appendPath("2.5")
                 .appendPath("forecast")
-                .appendQueryParameter("lat", lat)
-                .appendQueryParameter("lon", lon)
+                .appendQueryParameter("q", city)
                 .appendQueryParameter("units", "metric")
                 .appendQueryParameter("lang", "ru")
                 .appendQueryParameter("appid", "df27b084e5286716dee61c9f45f82a1a");
         String urlForecastWeather = builderForecastWeather.build().toString();
 
-        new Task().execute(urlCurrentWeather, urlForecastWeather);
+        new Task().execute("forecast", urlForecastWeather);
     }
 
     private class Task extends AsyncTask<String, Void, String[]> {
@@ -70,7 +75,7 @@ public class WeatherAPI {
 
         protected String[] doInBackground(String... params) {
             String[] result = new String[2];
-            result[0] = HTTP.load(params[0]);
+            result[0] = params[0];
             result[1] = HTTP.load(params[1]);
             return result;
         }
@@ -79,19 +84,25 @@ public class WeatherAPI {
         protected void onPostExecute(String[] result) {
             super.onPostExecute(result);
             try {
-                if (result[0] != null && result[1] != null) {
-                    JSONObject currentRaw = new JSONObject(result[0]);
-                    WeatherData current = new WeatherData(currentRaw);
+                if (result[1] != null) {
+                    switch (result[0]) {
+                        case "current":
+                            JSONObject currentRaw = new JSONObject(result[1]);
+                            WeatherData current = new WeatherData(currentRaw);
+                            weatherAPIInterface.onGetCurrentWeatherPost(current);
+                            break;
 
-                    JSONObject forecastRaw = new JSONObject(result[1]);
-                    JSONArray forecastRawList = forecastRaw.getJSONArray("list");
-                    WeatherData[] forecast = new WeatherData[forecastRawList.length()];
-                    for (int i = 0; i < forecastRawList.length(); i++) {
-                        JSONObject forecastRawListItem = forecastRawList.getJSONObject(i);
-                        forecast[i] = new WeatherData(forecastRawListItem);
+                        case "forecast":
+                            JSONObject forecastRaw = new JSONObject(result[1]);
+                            JSONArray forecastRawList = forecastRaw.getJSONArray("list");
+                            WeatherData[] forecast = new WeatherData[forecastRawList.length()];
+                            for (int i = 0; i < forecastRawList.length(); i++) {
+                                JSONObject forecastRawListItem = forecastRawList.getJSONObject(i);
+                                forecast[i] = new WeatherData(forecastRawListItem);
+                            }
+                            weatherAPIInterface.onGetForecastWeatherPost(forecast);
+                            break;
                     }
-
-                    weatherAPIInterface.onWeatherAPIPost(current, forecast);
                 }
             } catch (JSONException error) {
                 error.printStackTrace();

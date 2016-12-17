@@ -14,16 +14,18 @@ import com.raxee.raxeeweather.api.WeatherData;
 
 
 public class CurrentWeatherFragment extends Fragment implements WeatherAPI.WeatherAPIInterface {
-    TextView dateView;
-    TextView tempView;
-    TextView tempMinMaxView;
-    TextView pressureView;
-    TextView humidityView;
-    TextView weatherView;
+    private WeatherData data;
+
+    private TextView dateView;
+    private TextView tempView;
+    private TextView tempMinMaxView;
+    private TextView pressureView;
+    private TextView humidityView;
+    private TextView weatherView;
 
     public CurrentWeatherFragment() {}
 
-    public void onWeatherAPIPost(WeatherData current, WeatherData[] forecast) {
+    public void onGetCurrentWeatherPost(WeatherData current) {
         dateView.setText(String.valueOf(current.date));
         tempMinMaxView.setText(String.valueOf(current.minTemp) + " - " + String.valueOf(current.maxTemp) + " °C");
         tempView.setText(String.valueOf(current.temp) + " °C");
@@ -31,6 +33,9 @@ public class CurrentWeatherFragment extends Fragment implements WeatherAPI.Weath
         humidityView.setText(String.valueOf(current.humidity) + " %");
         weatherView.setText(current.weather);
     }
+
+    // TODO: delete
+    public void onGetForecastWeatherPost(WeatherData[] forecast) {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,7 +48,7 @@ public class CurrentWeatherFragment extends Fragment implements WeatherAPI.Weath
         humidityView = (TextView)view.findViewById(R.id.humidity);
         weatherView = (TextView)view.findViewById(R.id.weather);
 
-        WeatherAPI.getInstance().getWeather(this, "0", "0");
+        WeatherAPI.getInstance().getCurrentWeather(this, "Ростов-на-Дону");
         return view;
     }
 }

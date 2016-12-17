@@ -14,9 +14,7 @@ public class MainActivity extends AppCompatActivity {
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.layout_weather, new CurrentWeatherFragment())
+                .replace(R.id.layout_current_weather, new CurrentWeatherFragment())
                 .commit();
-
-
     }
 }
