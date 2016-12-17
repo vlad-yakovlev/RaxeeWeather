@@ -39,11 +39,14 @@ public class CurrentWeatherFragment extends Fragment {
     public void loadWeather(String city) {
         WeatherAPI.getInstance().getCurrentWeather(city, new WeatherAPI.OnCallbackListener() {
             public void onCallback(WeatherData[] current) {
-                dateView.setText(String.valueOf(current[0].date));
-                tempView.setText(String.valueOf(current[0].temp) + " °C");
-                pressureView.setText(String.valueOf(current[0].pressure) + " мм.рт.ст.");
-                humidityView.setText(String.valueOf(current[0].humidity) + " %");
-                weatherView.setText(current[0].weather);
+                WeatherData weather = current[0];
+
+                dateView.setText(String.valueOf(weather.date));
+                tempView.setText(String.valueOf(weather.temp) + " °C");
+                pressureView.setText(String.valueOf(weather.pressure) + " мм.рт.ст.");
+                humidityView.setText(String.valueOf(weather.humidity) + " %");
+                weatherView.setText(weather.weather);
+
                 layoutView.setVisibility(View.VISIBLE);
             }
         });

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.raxee.raxeeweather.R;
 import com.raxee.raxeeweather.api.WeatherAPI;
 import com.raxee.raxeeweather.api.WeatherData;
+import com.raxee.raxeeweather.module.Utility;
 
 public class ForecastWeatherFragment extends Fragment {
     private LinearLayout layoutView;
@@ -35,29 +36,30 @@ public class ForecastWeatherFragment extends Fragment {
     public void loadWeather(String city) {
         WeatherAPI.getInstance().getForecastWeather(city, new WeatherAPI.OnCallbackListener() {
             public void onCallback(WeatherData[] forecast) {
+                weatherListView.setAdapter(new WeatherListAdapter(getActivity(), R.layout.layout_weather_item, forecast));
+                Utility.setListViewHeightBasedOnChildren(weatherListView);
                 layoutView.setVisibility(View.VISIBLE);
-                weatherListView.setAdapter(new ForecastAdapter(getActivity(), R.layout.layout_weather_item, forecast));
             }
         });
     }
 
-    public class ForecastAdapter extends ArrayAdapter<WeatherData> {
+    public class WeatherListAdapter extends ArrayAdapter<WeatherData> {
         private final Context context;
-        private final int layoutResourceId;
+        private final int layout;
         private WeatherData data[] = null;
 
-        public ForecastAdapter(Context context, int layoutResourceId, WeatherData[] data) {
-            super(context, layoutResourceId, data);
+        public WeatherListAdapter(Context context, int layout, WeatherData[] data) {
+            super(context, layout, data);
             this.context = context;
-            this.layoutResourceId = layoutResourceId;
+            this.layout = layout;
             this.data = data;
         }
 
         @Override
-        public View getView(int position, View convertView, final ViewGroup parentGroup) {
+        public View getView(int position, View convertView, final ViewGroup parent) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
-            View view = inflater.inflate(layoutResourceId, parentGroup, false);
+            View view = inflater.inflate(layout, parent, false);
             WeatherData weather = data[position];
 
             ((TextView)view.findViewById(R.id.date)).setText(String.valueOf(weather.date));
