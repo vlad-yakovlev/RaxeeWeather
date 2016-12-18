@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,8 @@ import android.widget.TextView;
 import com.raxee.raxeeweather.R;
 import com.raxee.raxeeweather.api.WeatherAPI;
 import com.raxee.raxeeweather.api.WeatherData;
-import com.raxee.raxeeweather.module.Utility;
+
+import java.text.SimpleDateFormat;
 
 public class ForecastWeatherFragment extends Fragment {
     private LinearLayout layoutView;
@@ -36,8 +38,8 @@ public class ForecastWeatherFragment extends Fragment {
     public void loadWeather(String city) {
         WeatherAPI.getInstance().getForecastWeather(city, new WeatherAPI.OnCallbackListener() {
             public void onCallback(WeatherData[] forecast) {
-                weatherListView.setAdapter(new WeatherListAdapter(getActivity(), R.layout.layout_weather_item, forecast));
-                Utility.setListViewHeightBasedOnChildren(weatherListView);
+                weatherListView.setAdapter(new WeatherListAdapter(getActivity(), R.layout.layout_weather_item_sm, forecast));
+                weatherListView.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, forecast.length * 49 - 1, getResources().getDisplayMetrics());
                 layoutView.setVisibility(View.VISIBLE);
             }
         });
@@ -62,11 +64,10 @@ public class ForecastWeatherFragment extends Fragment {
             View view = inflater.inflate(layout, parent, false);
             WeatherData weather = data[position];
 
-            ((TextView)view.findViewById(R.id.date)).setText(String.valueOf(weather.date));
-            ((TextView)view.findViewById(R.id.temp)).setText(String.valueOf(weather.temp) + " °C");
-            ((TextView)view.findViewById(R.id.pressure)).setText(String.valueOf(weather.pressure) + " мм.рт.ст.");
-            ((TextView)view.findViewById(R.id.humidity)).setText(String.valueOf(weather.humidity) + " %");
-            ((TextView)view.findViewById(R.id.weather)).setText(weather.weather);
+            SimpleDateFormat dateDormat = new SimpleDateFormat("EE HH:mm");
+
+            ((TextView)view.findViewById(R.id.datetime)).setText(dateDormat.format(weather.datetime).toUpperCase());
+            ((TextView)view.findViewById(R.id.temperature)).setText(weather.temperature.toString());
 
             return view;
         }

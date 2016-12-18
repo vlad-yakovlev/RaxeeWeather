@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 
 import com.raxee.raxeeweather.module.HTTP;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +24,7 @@ public class WeatherAPI {
     }
 
     public interface OnCallbackListener {
-        void onCallback(WeatherData[] forecast);
+        void onCallback(WeatherData[] data);
     }
 
     public void getCurrentWeather(String city, OnCallbackListener onCallbackListener) {
@@ -38,7 +37,6 @@ public class WeatherAPI {
                 .appendPath("weather")
                 .appendQueryParameter("q", city)
                 .appendQueryParameter("units", "metric")
-                .appendQueryParameter("lang", "ru")
                 .appendQueryParameter("appid", "df27b084e5286716dee61c9f45f82a1a");
         String urlCurrentWeather = builderCurrentWeather.build().toString();
 
@@ -55,7 +53,6 @@ public class WeatherAPI {
                 .appendPath("forecast")
                 .appendQueryParameter("q", city)
                 .appendQueryParameter("units", "metric")
-                .appendQueryParameter("lang", "ru")
                 .appendQueryParameter("appid", "df27b084e5286716dee61c9f45f82a1a");
         String urlForecastWeather = builderForecastWeather.build().toString();
 
@@ -86,20 +83,12 @@ public class WeatherAPI {
             try {
                 switch (type) {
                     case "current":
-                        JSONObject currentRaw = new JSONObject(result);
-                        WeatherData[] current = new WeatherData[1];
-                        current[0] = new WeatherData(currentRaw);
+                        WeatherData[] current = { new WeatherData(new JSONObject(result)) };
                         onCallbackListener.onCallback(current);
                         break;
 
                     case "forecast":
-                        JSONObject forecastRaw = new JSONObject(result);
-                        JSONArray forecastRawList = forecastRaw.getJSONArray("list");
-                        WeatherData[] forecast = new WeatherData[forecastRawList.length()];
-                        for (int i = 0; i < forecastRawList.length(); i++) {
-                            JSONObject forecastRawListItem = forecastRawList.getJSONObject(i);
-                            forecast[i] = new WeatherData(forecastRawListItem);
-                        }
+                        WeatherData[] forecast = WeatherData.buildArray(new JSONObject(result));
                         onCallbackListener.onCallback(forecast);
                         break;
                 }

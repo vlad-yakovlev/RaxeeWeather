@@ -14,11 +14,9 @@ import com.raxee.raxeeweather.api.WeatherData;
 
 public class CurrentWeatherFragment extends Fragment {
     private LinearLayout layoutView;
-    private TextView dateView;
-    private TextView tempView;
+    private TextView temperatureView;
     private TextView pressureView;
     private TextView humidityView;
-    private TextView weatherView;
 
     public CurrentWeatherFragment() {}
 
@@ -27,11 +25,10 @@ public class CurrentWeatherFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_current_weather, container, false);
 
         layoutView = (LinearLayout)view.findViewById(R.id.layout);
-        dateView = (TextView)view.findViewById(R.id.date);
-        tempView = (TextView)view.findViewById(R.id.temp);
+
+        temperatureView = (TextView)view.findViewById(R.id.temperature);
         pressureView = (TextView)view.findViewById(R.id.pressure);
         humidityView = (TextView)view.findViewById(R.id.humidity);
-        weatherView = (TextView)view.findViewById(R.id.weather);
 
         return view;
     }
@@ -41,11 +38,9 @@ public class CurrentWeatherFragment extends Fragment {
             public void onCallback(WeatherData[] current) {
                 WeatherData weather = current[0];
 
-                dateView.setText(String.valueOf(weather.date));
-                tempView.setText(String.valueOf(weather.temp) + " °C");
-                pressureView.setText(String.valueOf(weather.pressure) + " мм.рт.ст.");
-                humidityView.setText(String.valueOf(weather.humidity) + " %");
-                weatherView.setText(weather.weather);
+                temperatureView.setText(weather.temperature.toString() + "°");
+                pressureView.setText(weather.pressure.toString() + " мм рт.ст.");
+                humidityView.setText(weather.humidity.toString() + "%");
 
                 layoutView.setVisibility(View.VISIBLE);
             }
