@@ -7,31 +7,48 @@ import org.json.JSONObject;
 import java.util.Calendar;
 import java.util.Date;
 
+import static java.lang.Math.round;
+
 public class WeatherData {
     public Date datetime;
     public Integer temperature;
     public Integer pressure;
     public Integer humidity;
+    public Integer windSpeed;
+    public String windDirection;
     public String icon;
 
     public WeatherData() {}
 
     public WeatherData(JSONObject data) {
         try {
-            Calendar cal = Calendar.getInstance();
-            cal.setTimeInMillis(data.getLong("dt") * 1000L);
-            datetime = cal.getTime();
+            datetime = getDatetimeByTimpstamp(data.getLong("dt"));
 
             JSONObject dataMain = data.getJSONObject("main");
-            temperature = (int)(dataMain.getDouble("temp"));
-            pressure = (int)(dataMain.getDouble("pressure") * 0.75);
-            humidity = (int)(dataMain.getDouble("humidity"));
+            temperature = (int)round(dataMain.getDouble("temp"));
+            pressure = (int)round(dataMain.getDouble("pressure") * 0.75);
+            humidity = (int)round(dataMain.getDouble("humidity"));
+
+            JSONObject dataWind = data.getJSONObject("wind");
+            windSpeed = (int)round(dataWind.getDouble("speed"));
+            windDirection = getWindDirectionByDegree(dataWind.getDouble("deg"));
 
             JSONObject dataWeather = data.getJSONArray("weather").getJSONObject(0);
             icon = dataWeather.getString("icon");
         } catch (JSONException error) {
             error.printStackTrace();
         }
+    }
+
+    private Date getDatetimeByTimpstamp(Long timestamp) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp * 1000L);
+        return cal.getTime();
+    }
+
+    private String getWindDirectionByDegree(Double degree) {
+        String[] directions = { "↑", "↗", "→", "↘", "↓", "↙", "←", "↖" };
+        return directions[(int)(round(degree / 8) % 8)];
     }
 
     public static WeatherData[] buildArray(JSONObject data) {

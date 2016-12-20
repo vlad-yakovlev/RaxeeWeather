@@ -30,7 +30,7 @@ public class ForecastWeatherFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_forecast_weather, container, false);
 
         layoutView = (LinearLayout)view.findViewById(R.id.layout);
-        weatherListView = (ListView)view.findViewById(R.id.weather_list);
+        weatherListView = (ListView)view.findViewById(R.id.weather_day_list);
 
         return view;
     }
@@ -40,6 +40,7 @@ public class ForecastWeatherFragment extends Fragment {
             public void onCallback(WeatherData[] forecast) {
                 weatherListView.setAdapter(new WeatherListAdapter(getActivity(), R.layout.layout_weather_item_sm, forecast));
                 weatherListView.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, forecast.length * 49 - 1, getResources().getDisplayMetrics());
+
                 layoutView.setVisibility(View.VISIBLE);
             }
         });
@@ -48,7 +49,7 @@ public class ForecastWeatherFragment extends Fragment {
     public class WeatherListAdapter extends ArrayAdapter<WeatherData> {
         private final Context context;
         private final int layout;
-        private WeatherData data[] = null;
+        private WeatherData[] data = null;
 
         public WeatherListAdapter(Context context, int layout, WeatherData[] data) {
             super(context, layout, data);

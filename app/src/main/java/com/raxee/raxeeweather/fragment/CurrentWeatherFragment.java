@@ -1,22 +1,28 @@
 package com.raxee.raxeeweather.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.raxee.raxeeweather.R;
 import com.raxee.raxeeweather.api.WeatherAPI;
 import com.raxee.raxeeweather.api.WeatherData;
 
+import java.text.SimpleDateFormat;
+
 public class CurrentWeatherFragment extends Fragment {
     private LinearLayout layoutView;
     private TextView temperatureView;
-    private TextView pressureView;
-    private TextView humidityView;
+    private ListView weatherListView;
 
     public CurrentWeatherFragment() {}
 
@@ -27,8 +33,7 @@ public class CurrentWeatherFragment extends Fragment {
         layoutView = (LinearLayout)view.findViewById(R.id.layout);
 
         temperatureView = (TextView)view.findViewById(R.id.temperature);
-        pressureView = (TextView)view.findViewById(R.id.pressure);
-        humidityView = (TextView)view.findViewById(R.id.humidity);
+        weatherListView = (ListView)view.findViewById(R.id.weather_item_list);
 
         return view;
     }
@@ -39,11 +44,61 @@ public class CurrentWeatherFragment extends Fragment {
                 WeatherData weather = current[0];
 
                 temperatureView.setText(weather.temperature.toString() + "°");
-                pressureView.setText(weather.pressure.toString() + " мм рт.ст.");
-                humidityView.setText(weather.humidity.toString() + "%");
+
+                ListItem[] weatherList = {
+                        new ListItem("Влажность вохдуха", weather.humidity.toString() + " %"),
+                        new ListItem("Атмосферное давление", weather.pressure.toString() + " мм рт.ст."),
+                        new ListItem("Ветер", weather.windSpeed.toString() + " м/с " + weather.windDirection),
+                };
+
+                weatherListView.setAdapter(new CurrentWeatherFragment.ListAdapter(getActivity(), R.layout.layout_list_item, weatherList));
+                weatherListView.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, weatherList.length * 49 - 1, getResources().getDisplayMetrics());
 
                 layoutView.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    public class ListItem {
+        public String name = null;
+        public String value = null;
+
+        public ListItem() {}
+
+        public ListItem(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
+    }
+
+    public class ListAdapter extends ArrayAdapter<ListItem> {
+        private final Context context;
+        private final int layout;
+        private ListItem[] data = null;
+
+        public ListAdapter(Context context, int layout, ListItem[] data) {
+            super(context, layout, data);
+            this.context = context;
+            this.layout = layout;
+            this.data = data;
+        }
+
+        @Override
+        public View getView(int position, View convertView, final ViewGroup parent) {
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+
+            View view = inflater.inflate(layout, parent, false);
+            ListItem item = data[position];
+
+            ((TextView)view.findViewById(R.id.name)).setText(item.name);
+            ((TextView)view.findViewById(R.id.value)).setText(item.value);
+
+            return view;
+        }
+
+        @Override
+        public int getCount() {
+            return data.length;
+        }
     }
 }
