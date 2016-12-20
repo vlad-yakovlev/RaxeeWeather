@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import com.raxee.raxeeweather.api.WeatherAPI;
 import com.raxee.raxeeweather.api.WeatherData;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class ForecastWeatherFragment extends Fragment {
     private LinearLayout layoutView;
@@ -63,12 +65,15 @@ public class ForecastWeatherFragment extends Fragment {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
             View view = inflater.inflate(layout, parent, false);
+
             WeatherData weather = data[position];
 
             SimpleDateFormat dateDormat = new SimpleDateFormat("EE HH:mm");
+            ((TextView)view.findViewById(R.id.datetime)).setText(String.format(Locale.getDefault(), "%S", dateDormat.format(weather.datetime)));
 
-            ((TextView)view.findViewById(R.id.datetime)).setText(String.format("%S", dateDormat.format(weather.datetime)));
-            ((TextView)view.findViewById(R.id.temperature)).setText(String.format("%d", weather.temperature));
+            ((ImageView)view.findViewById(R.id.icon)).setImageResource(weather.icon);
+
+            ((TextView)view.findViewById(R.id.temperature)).setText(String.format(Locale.getDefault(), "%d", weather.temperature));
 
             return view;
         }

@@ -1,5 +1,7 @@
 package com.raxee.raxeeweather.api;
 
+import com.raxee.raxeeweather.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,7 @@ public class WeatherData {
     public Integer humidity;
     public Integer windSpeed;
     public String windDirection;
-    public String icon;
+    public Integer icon;
 
     public WeatherData() {}
 
@@ -34,7 +36,7 @@ public class WeatherData {
             windDirection = getWindDirectionByDegree(dataWind.getDouble("deg"));
 
             JSONObject dataWeather = data.getJSONArray("weather").getJSONObject(0);
-            icon = dataWeather.getString("icon");
+            icon = getIconByID(dataWeather.getString("icon"));
         } catch (JSONException error) {
             error.printStackTrace();
         }
@@ -49,6 +51,39 @@ public class WeatherData {
     private String getWindDirectionByDegree(Double degree) {
         String[] directions = { "↑", "↗", "→", "↘", "↓", "↙", "←", "↖" };
         return directions[(int)(round(degree / 8) % 8)];
+    }
+
+    private Integer getIconByID(String id) {
+        switch (id) {
+            case "01d": return R.drawable.day_sunny;
+            case "01n": return R.drawable.stars;
+
+            case "02d": return R.drawable.day_cloudy;
+            case "02n": return R.drawable.night_alt_cloudy;
+
+            case "03d": return R.drawable.cloud;
+            case "03n": return R.drawable.cloud;
+
+            case "04d": return R.drawable.cloudy;
+            case "04n": return R.drawable.cloudy;
+
+            case "09d": return R.drawable.rain;
+            case "09n": return R.drawable.rain;
+
+            case "10d": return R.drawable.day_rain;
+            case "10n": return R.drawable.night_alt_rain;
+
+            case "11d": return R.drawable.thunderstorm;
+            case "11n": return R.drawable.thunderstorm;
+
+            case "13d": return R.drawable.snow;
+            case "13n": return R.drawable.snow;
+
+            case "50d": return R.drawable.fog;
+            case "50n": return R.drawable.fog;
+
+            default: return null;
+        }
     }
 
     public static WeatherData[] buildArray(JSONObject data) {

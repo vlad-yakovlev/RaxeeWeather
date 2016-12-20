@@ -18,6 +18,7 @@ import com.raxee.raxeeweather.api.WeatherAPI;
 import com.raxee.raxeeweather.api.WeatherData;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class CurrentWeatherFragment extends Fragment {
     private LinearLayout layoutView;
@@ -43,12 +44,12 @@ public class CurrentWeatherFragment extends Fragment {
             public void onCallback(WeatherData[] current) {
                 WeatherData weather = current[0];
 
-                temperatureView.setText(String.format("%d°", weather.temperature));
+                temperatureView.setText(String.format(Locale.getDefault(), "%d°", weather.temperature));
 
                 ListItem[] weatherList = {
-                        new ListItem("Влажность вохдуха", String.format("%d %%", weather.humidity)),
-                        new ListItem("Атмосферное давление", String.format("%d мм рт.ст.", weather.humidity)),
-                        new ListItem("Ветер", String.format("%d м/с %s", weather.windSpeed, weather.windDirection)),
+                        new ListItem("Влажность вохдуха", String.format(Locale.getDefault(), "%d %%", weather.humidity)),
+                        new ListItem("Атмосферное давление", String.format(Locale.getDefault(), "%d мм рт.ст.", weather.humidity)),
+                        new ListItem("Ветер", String.format(Locale.getDefault(), "%d м/с %s", weather.windSpeed, weather.windDirection)),
                 };
 
                 weatherListView.setAdapter(new CurrentWeatherFragment.ListAdapter(getActivity(), R.layout.layout_list_item, weatherList));
@@ -88,6 +89,7 @@ public class CurrentWeatherFragment extends Fragment {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
             View view = inflater.inflate(layout, parent, false);
+
             ListItem item = data[position];
 
             ((TextView)view.findViewById(R.id.name)).setText(item.name);
