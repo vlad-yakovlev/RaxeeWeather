@@ -67,8 +67,8 @@ public class ForecastWeatherFragment extends Fragment {
 
             SimpleDateFormat dateDormat = new SimpleDateFormat("EE HH:mm");
 
-            ((TextView)view.findViewById(R.id.datetime)).setText(dateDormat.format(weather.datetime).toUpperCase());
-            ((TextView)view.findViewById(R.id.temperature)).setText(weather.temperature.toString());
+            ((TextView)view.findViewById(R.id.datetime)).setText(String.format("%S", dateDormat.format(weather.datetime)));
+            ((TextView)view.findViewById(R.id.temperature)).setText(String.format("%d", weather.temperature));
 
             return view;
         }

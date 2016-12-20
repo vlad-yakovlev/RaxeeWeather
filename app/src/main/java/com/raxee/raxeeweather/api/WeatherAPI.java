@@ -28,35 +28,11 @@ public class WeatherAPI {
     }
 
     public void getCurrentWeather(String city, OnCallbackListener onCallbackListener) {
-        Uri.Builder builderCurrentWeather = new Uri.Builder();
-        builderCurrentWeather
-                .scheme("http")
-                .authority("api.openweathermap.org")
-                .appendPath("data")
-                .appendPath("2.5")
-                .appendPath("weather")
-                .appendQueryParameter("q", city)
-                .appendQueryParameter("units", "metric")
-                .appendQueryParameter("appid", "df27b084e5286716dee61c9f45f82a1a");
-        String urlCurrentWeather = builderCurrentWeather.build().toString();
-
-        new Task("current", onCallbackListener).execute(urlCurrentWeather);
+        new Task("current", onCallbackListener).execute(String.format("http://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&appid=df27b084e5286716dee61c9f45f82a1a", city));
     }
 
     public void getForecastWeather(String city, OnCallbackListener onCallbackListener) {
-        Uri.Builder builderForecastWeather = new Uri.Builder();
-        builderForecastWeather
-                .scheme("http")
-                .authority("api.openweathermap.org")
-                .appendPath("data")
-                .appendPath("2.5")
-                .appendPath("forecast")
-                .appendQueryParameter("q", city)
-                .appendQueryParameter("units", "metric")
-                .appendQueryParameter("appid", "df27b084e5286716dee61c9f45f82a1a");
-        String urlForecastWeather = builderForecastWeather.build().toString();
-
-        new Task("forecast", onCallbackListener).execute(urlForecastWeather);
+        new Task("forecast", onCallbackListener).execute(String.format("http://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric&appid=df27b084e5286716dee61c9f45f82a1a", city));
     }
 
     private class Task extends AsyncTask<String, Void, String> {

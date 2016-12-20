@@ -43,12 +43,12 @@ public class CurrentWeatherFragment extends Fragment {
             public void onCallback(WeatherData[] current) {
                 WeatherData weather = current[0];
 
-                temperatureView.setText(weather.temperature.toString() + "°");
+                temperatureView.setText(String.format("%d°", weather.temperature));
 
                 ListItem[] weatherList = {
-                        new ListItem("Влажность вохдуха", weather.humidity.toString() + " %"),
-                        new ListItem("Атмосферное давление", weather.pressure.toString() + " мм рт.ст."),
-                        new ListItem("Ветер", weather.windSpeed.toString() + " м/с " + weather.windDirection),
+                        new ListItem("Влажность вохдуха", String.format("%d %%", weather.humidity)),
+                        new ListItem("Атмосферное давление", String.format("%d мм рт.ст.", weather.humidity)),
+                        new ListItem("Ветер", String.format("%d м/с %s", weather.windSpeed, weather.windDirection)),
                 };
 
                 weatherListView.setAdapter(new CurrentWeatherFragment.ListAdapter(getActivity(), R.layout.layout_list_item, weatherList));
