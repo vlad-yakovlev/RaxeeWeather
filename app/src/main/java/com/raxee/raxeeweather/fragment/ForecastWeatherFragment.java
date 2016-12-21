@@ -74,6 +74,7 @@ public class ForecastWeatherFragment extends Fragment {
             ((ImageView)view.findViewById(R.id.icon)).setImageResource(weather.icon);
 
             ((TextView)view.findViewById(R.id.temperature)).setText(String.format(Locale.getDefault(), "%d", weather.temperature));
+            ((TextView)view.findViewById(R.id.feel_temperature)).setText(String.format(Locale.getDefault(), "%d", weather.feelTemperature));
 
             return view;
         }

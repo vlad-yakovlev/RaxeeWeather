@@ -1,6 +1,7 @@
 package com.raxee.raxeeweather.api;
 
 import com.raxee.raxeeweather.R;
+import com.raxee.raxeeweather.activity.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,8 +9,6 @@ import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
-
-import static java.lang.Math.round;
 
 public class WeatherData {
     public Date datetime;
@@ -19,6 +18,7 @@ public class WeatherData {
     public Integer windSpeed;
     public String windDirection;
     public Integer icon;
+    public Integer feelTemperature;
 
     public WeatherData() {}
 
@@ -27,16 +27,18 @@ public class WeatherData {
             datetime = getDatetimeByTimpstamp(data.getLong("dt"));
 
             JSONObject dataMain = data.getJSONObject("main");
-            temperature = (int)round(dataMain.getDouble("temp"));
-            pressure = (int)round(dataMain.getDouble("pressure") * 0.75);
-            humidity = (int)round(dataMain.getDouble("humidity"));
+            temperature = (int)Math.round(dataMain.getDouble("temp"));
+            pressure = (int)Math.round(dataMain.getDouble("pressure") * 0.75);
+            humidity = (int)Math.round(dataMain.getDouble("humidity"));
 
             JSONObject dataWind = data.getJSONObject("wind");
-            windSpeed = (int)round(dataWind.getDouble("speed"));
+            windSpeed = (int)Math.round(dataWind.getDouble("speed"));
             windDirection = getWindDirectionByDegree(dataWind.getDouble("deg"));
 
             JSONObject dataWeather = data.getJSONArray("weather").getJSONObject(0);
             icon = getIconByID(dataWeather.getString("icon"));
+
+            feelTemperature = (int)Math.round(getFeelTemperature(dataMain.getDouble("temp"), dataMain.getDouble("humidity"), dataMain.getDouble("pressure"), dataWind.getDouble("speed")));
         } catch (JSONException error) {
             error.printStackTrace();
         }
@@ -50,7 +52,7 @@ public class WeatherData {
 
     private String getWindDirectionByDegree(Double degree) {
         String[] directions = { "↑", "↗", "→", "↘", "↓", "↙", "←", "↖" };
-        return directions[(int)(round(degree / 8) % 8)];
+        return directions[(int)(Math.round(degree / 8) % 8)];
     }
 
     private Integer getIconByID(String id) {
@@ -84,6 +86,11 @@ public class WeatherData {
 
             default: return null;
         }
+    }
+
+    public Double getFeelTemperature(Double temperature, Double humidity, Double pressure, Double wind) {
+        Double vaporPressure = (1.0016 + 3.15 * 1e-6 * pressure - 0.074 / pressure) * (6.112 * Math.exp((17.62 * temperature) / (243.12 + temperature)));
+        return -2.7 + 1.04 * temperature + 2.0 * vaporPressure * humidity / 100 - 0.65 * wind;
     }
 
     public static WeatherData[] buildArray(JSONObject data) {

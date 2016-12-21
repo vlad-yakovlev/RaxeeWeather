@@ -2,6 +2,7 @@ package com.raxee.raxeeweather.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.Image;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.TypedValue;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,6 +25,8 @@ import java.util.Locale;
 public class CurrentWeatherFragment extends Fragment {
     private LinearLayout layoutView;
     private TextView temperatureView;
+    private TextView feelTemperatureView;
+    private ImageView iconView;
     private ListView weatherListView;
 
     public CurrentWeatherFragment() {}
@@ -34,6 +38,8 @@ public class CurrentWeatherFragment extends Fragment {
         layoutView = (LinearLayout)view.findViewById(R.id.layout);
 
         temperatureView = (TextView)view.findViewById(R.id.temperature);
+        feelTemperatureView = (TextView)view.findViewById(R.id.feel_temperature);
+        iconView = (ImageView)view.findViewById(R.id.icon);
         weatherListView = (ListView)view.findViewById(R.id.weather_item_list);
 
         return view;
@@ -45,10 +51,12 @@ public class CurrentWeatherFragment extends Fragment {
                 WeatherData weather = current[0];
 
                 temperatureView.setText(String.format(Locale.getDefault(), "%d°", weather.temperature));
+                feelTemperatureView.setText(String.format(Locale.getDefault(), "%d°", weather.feelTemperature));
+                iconView.setImageResource(weather.icon);
 
                 ListItem[] weatherList = {
                         new ListItem("Влажность вохдуха", String.format(Locale.getDefault(), "%d %%", weather.humidity)),
-                        new ListItem("Атмосферное давление", String.format(Locale.getDefault(), "%d мм рт.ст.", weather.humidity)),
+                        new ListItem("Атмосферное давление", String.format(Locale.getDefault(), "%d мм рт.ст.", weather.pressure)),
                         new ListItem("Ветер", String.format(Locale.getDefault(), "%d м/с %s", weather.windSpeed, weather.windDirection)),
                 };
 
