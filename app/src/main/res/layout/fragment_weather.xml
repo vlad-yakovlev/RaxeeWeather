@@ -31,26 +31,20 @@
 
                 <TextView
                     android:id="@+id/temperature"
-                    android:layout_weight=".5"
                     android:layout_width="0dp"
+                    android:layout_weight=".5"
                     android:layout_height="wrap_content"
-                    android:textSize="60dp"
-                    android:textAlignment="textStart"
+                    android:textSize="80dp"
+                    android:textAlignment="viewStart"
                     android:textColor="?android:attr/textColorPrimary" />
 
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    tools:ignore="ContentDescription" />
-
                 <TextView
-                    android:id="@+id/feel_temperature"
-                    android:layout_weight=".5"
+                    android:id="@+id/icon"
                     android:layout_width="0dp"
+                    android:layout_weight=".5"
                     android:layout_height="wrap_content"
-                    android:textSize="60dp"
-                    android:textAlignment="textEnd"
+                    android:textSize="80dp"
+                    android:textAlignment="viewEnd"
                     android:textColor="?android:attr/textColorPrimary" />
 
             </LinearLayout>

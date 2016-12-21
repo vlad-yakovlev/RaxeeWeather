@@ -16,10 +16,8 @@ public class WeatherData {
     public Integer humidity;
     public Integer windSpeed;
     public String windDirection;
-    public Integer icon;
+    public Integer iconResource;
     public Integer feelTemperature;
-
-    public WeatherData() {}
 
     public WeatherData(JSONObject data) {
         try {
@@ -32,10 +30,10 @@ public class WeatherData {
 
             JSONObject dataWind = data.getJSONObject("wind");
             windSpeed = (int)Math.round(dataWind.getDouble("speed"));
-            windDirection = getWindDirectionByDegree(dataWind.getDouble("deg"));
+            windDirection = dataWind.has("deg") ? getWindDirectionByDegree(dataWind.getDouble("deg")) : "";
 
             JSONObject dataWeather = data.getJSONArray("weather").getJSONObject(0);
-            icon = getIconByID(dataWeather.getString("icon"));
+            iconResource = getIconResourceByID(dataWeather.getString("icon"));
 
             feelTemperature = (int)Math.round(getFeelTemperature(dataMain.getDouble("temp"), dataMain.getDouble("humidity"), dataMain.getDouble("pressure"), dataWind.getDouble("speed")));
         } catch (JSONException error) {
@@ -54,34 +52,34 @@ public class WeatherData {
         return directions[(int)(Math.round(degree / 8) % 8)];
     }
 
-    private Integer getIconByID(String id) {
+    private Integer getIconResourceByID(String id) {
         switch (id) {
-            case "01d": return R.drawable.day_sunny;
-            case "01n": return R.drawable.stars;
+            case "01d": return R.string.wi_day_sunny;
+            case "01n": return R.string.wi_stars;
 
-            case "02d": return R.drawable.day_cloudy;
-            case "02n": return R.drawable.night_alt_cloudy;
+            case "02d": return R.string.wi_day_cloudy;
+            case "02n": return R.string.wi_night_alt_cloudy;
 
-            case "03d": return R.drawable.cloud;
-            case "03n": return R.drawable.cloud;
+            case "03d": return R.string.wi_cloud;
+            case "03n": return R.string.wi_cloud;
 
-            case "04d": return R.drawable.cloudy;
-            case "04n": return R.drawable.cloudy;
+            case "04d": return R.string.wi_cloudy;
+            case "04n": return R.string.wi_cloudy;
 
-            case "09d": return R.drawable.rain;
-            case "09n": return R.drawable.rain;
+            case "09d": return R.string.wi_rain;
+            case "09n": return R.string.wi_rain;
 
-            case "10d": return R.drawable.day_rain;
-            case "10n": return R.drawable.night_alt_rain;
+            case "10d": return R.string.wi_day_rain;
+            case "10n": return R.string.wi_night_alt_rain;
 
-            case "11d": return R.drawable.thunderstorm;
-            case "11n": return R.drawable.thunderstorm;
+            case "11d": return R.string.wi_thunderstorm;
+            case "11n": return R.string.wi_thunderstorm;
 
-            case "13d": return R.drawable.snow;
-            case "13n": return R.drawable.snow;
+            case "13d": return R.string.wi_snow;
+            case "13n": return R.string.wi_snow;
 
-            case "50d": return R.drawable.fog;
-            case "50n": return R.drawable.fog;
+            case "50d": return R.string.wi_fog;
+            case "50n": return R.string.wi_fog;
 
             default: return null;
         }

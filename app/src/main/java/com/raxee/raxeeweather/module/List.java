@@ -14,9 +14,9 @@ import android.widget.TextView;
 import com.raxee.raxeeweather.R;
 
 public class List {
-    public static void draw(Context context, Resources resources, ListView list, int layout, List.Item[] data) {
+    public static void draw(Context context, ListView list, int layout, List.Item[] data) {
         list.setAdapter(new Adapter(context, layout, data));
-        list.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, data.length * 49 - 1, resources.getDisplayMetrics());
+        list.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, data.length * 49 - 1, context.getResources().getDisplayMetrics());
     }
 
     public static class Item {
@@ -41,16 +41,27 @@ public class List {
             this.data = data;
         }
 
+        private static class ItemView {
+            public TextView name;
+            public TextView value;
+
+            public ItemView(View view) {
+                name = (TextView)view.findViewById(R.id.name);
+                value = (TextView)view.findViewById(R.id.value);
+            }
+        }
+
         @Override
         public View getView(int position, View convertView, final ViewGroup parent) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
             View view = inflater.inflate(layout, parent, false);
+            ItemView itemView = new ItemView(view);
 
             Item item = data[position];
 
-            ((TextView)view.findViewById(R.id.name)).setText(item.name);
-            ((TextView)view.findViewById(R.id.value)).setText(item.value);
+            itemView.name.setText(item.name);
+            itemView.value.setText(item.value);
 
             return view;
         }

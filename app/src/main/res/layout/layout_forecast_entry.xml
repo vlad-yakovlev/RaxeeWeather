@@ -10,34 +10,28 @@
     android:gravity="center_vertical">
 
     <TextView
-        android:id="@+id/forecast_datetime"
-        android:textAlignment="viewStart"
+        android:id="@+id/datetime"
         android:layout_width="0dp"
         android:layout_weight=".5"
         android:layout_height="wrap_content"
+        android:textAlignment="viewStart"
         android:textColor="?android:attr/textColorPrimary"
         />
 
-    <ImageView
-        android:id="@+id/forecast_icon"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        tools:ignore="ContentDescription" />
-
     <TextView
-        android:id="@+id/forecast_temperature"
-        android:textAlignment="viewEnd"
-        android:layout_width="0dp"
-        android:layout_weight=".4"
+        android:id="@+id/icon"
+        android:layout_width="32dp"
         android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:textAlignment="center"
         android:textColor="?android:attr/textColorPrimary" />
 
     <TextView
-        android:id="@+id/forecast_feel_temperature"
-        android:textAlignment="viewEnd"
+        android:id="@+id/temperature"
         android:layout_width="0dp"
-        android:layout_weight=".1"
+        android:layout_weight=".5"
         android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
         android:textColor="?android:attr/textColorPrimary" />
 
 </LinearLayout>
