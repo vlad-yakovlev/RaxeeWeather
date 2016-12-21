@@ -1,7 +1,6 @@
 package com.raxee.raxeeweather.api;
 
 import com.raxee.raxeeweather.R;
-import com.raxee.raxeeweather.activity.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

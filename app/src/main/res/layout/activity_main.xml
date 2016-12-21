@@ -14,13 +14,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/layout_current_weather"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:id="@+id/layout_forecast_weather"
+            android:id="@+id/layout_weather"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />

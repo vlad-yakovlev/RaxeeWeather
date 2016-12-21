@@ -1,0 +1,86 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.raxee.raxeeweather.fragment.WeatherFragment">
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/current_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardUseCompatPadding="true"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingBottom="1dp"
+                android:background="@drawable/current_weather_header">
+
+                <TextView
+                    android:id="@+id/temperature"
+                    android:layout_weight=".5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="60dp"
+                    android:textAlignment="textStart"
+                    android:textColor="?android:attr/textColorPrimary" />
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/feel_temperature"
+                    android:layout_weight=".5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="60dp"
+                    android:textAlignment="textEnd"
+                    android:textColor="?android:attr/textColorPrimary" />
+
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:listSelector="@android:color/transparent"
+                android:cacheColorHint="@android:color/transparent" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/forecast_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardUseCompatPadding="true"
+        android:visibility="gone">
+
+        <ListView
+            android:id="@+id/day_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:listSelector="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent" />
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -2,13 +2,9 @@ package com.raxee.raxeeweather.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.raxee.raxeeweather.R;
-import com.raxee.raxeeweather.fragment.CurrentWeatherFragment;
-import com.raxee.raxeeweather.fragment.ForecastWeatherFragment;
+import com.raxee.raxeeweather.fragment.WeatherFragment;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -16,17 +12,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final CurrentWeatherFragment currentWeatherFragment = new CurrentWeatherFragment();
-        final ForecastWeatherFragment forecastWeatherFragment = new ForecastWeatherFragment();
+        final WeatherFragment weatherFragment = new WeatherFragment();
 
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.layout_current_weather, currentWeatherFragment)
-                .replace(R.id.layout_forecast_weather, forecastWeatherFragment)
+                .replace(R.id.layout_weather, weatherFragment)
                 .commit();
 
-        String city = "Ростов-на-Дону";
-        currentWeatherFragment.loadWeather(city);
-        forecastWeatherFragment.loadWeather(city);
+        weatherFragment.loadWeather("Ростов-на-Дону");
     }
 }
