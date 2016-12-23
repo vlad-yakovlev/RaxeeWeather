@@ -2,7 +2,6 @@ package com.raxee.raxeeweather.module;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,8 @@ import android.widget.TextView;
 
 import com.raxee.raxeeweather.R;
 
-public class List {
-    public static void draw(Context context, ListView list, int layout, List.Item[] data) {
+public class ViewList {
+    public static void draw(Context context, ListView list, int layout, ViewList.Item[] data) {
         list.setAdapter(new Adapter(context, layout, data));
         list.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, data.length * 49 - 1, context.getResources().getDisplayMetrics());
     }

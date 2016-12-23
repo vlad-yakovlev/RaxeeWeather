@@ -1,25 +1,58 @@
-package com.raxee.raxeeweather.api;
+package com.raxee.raxeeweather.model;
 
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 import com.raxee.raxeeweather.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-public class WeatherData {
+@Table(name = "Weather")
+public class WeatherModel extends Model implements Serializable {
+    @Column(name = "datetime")
     public Date datetime;
+
+    @Column(name = "temperature")
     public Integer temperature;
+
+    @Column(name = "pressure")
     public Integer pressure;
+
+    @Column(name = "humidity")
     public Integer humidity;
+
+    @Column(name = "windSpeed")
     public Integer windSpeed;
+
+    @Column(name = "windDirection")
     public String windDirection;
+
+    @Column(name = "iconResource")
     public Integer iconResource;
+
+    @Column(name = "feelTemperature")
     public Integer feelTemperature;
 
-    public WeatherData(JSONObject data) {
+    @Column(name = "city")
+    public String city;
+
+    @Column(name = "type")
+    public String type;
+
+
+    public WeatherModel() {
+        super();
+    }
+
+    public WeatherModel(JSONObject data, String city, String type) {
+        super();
+
         try {
             datetime = getDatetimeByTimpstamp(data.getLong("dt"));
 
@@ -39,6 +72,9 @@ public class WeatherData {
         } catch (JSONException error) {
             error.printStackTrace();
         }
+
+        this.city = city;
+        this.type = type;
     }
 
     private Date getDatetimeByTimpstamp(Long timestamp) {
@@ -90,15 +126,15 @@ public class WeatherData {
         return -2.7 + 1.04 * temperature + 2.0 * vaporPressure * humidity / 100 - 0.65 * wind;
     }
 
-    public static WeatherData[] buildArray(JSONObject data) {
-        WeatherData[] result = null;
+    public static WeatherModel[] buildArray(JSONObject data, String city, String type) {
+        WeatherModel[] result = null;
 
         try {
             JSONArray list = data.getJSONArray("list");
-            result = new WeatherData[list.length()];
+            result = new WeatherModel[list.length()];
             for (int i = 0; i < list.length(); i++) {
                 JSONObject item = list.getJSONObject(i);
-                result[i] = new WeatherData(item);
+                result[i] = new WeatherModel(item, city, type);
             }
         } catch (JSONException error) {
             error.printStackTrace();
