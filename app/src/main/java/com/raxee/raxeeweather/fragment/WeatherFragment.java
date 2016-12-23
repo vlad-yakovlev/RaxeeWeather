@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.raxee.raxeeweather.R;
 import com.raxee.raxeeweather.manager.WeatherManager;
 import com.raxee.raxeeweather.model.WeatherModel;
-import com.raxee.raxeeweather.module.DayList;
+import com.raxee.raxeeweather.module.ForecastList;
 import com.raxee.raxeeweather.module.FontManager;
 import com.raxee.raxeeweather.module.ViewList;
 
@@ -89,9 +89,9 @@ public class WeatherFragment extends Fragment {
                         new ViewList.Item("Ветер", String.format(Locale.getDefault(), "%d м/с %s", current.windSpeed, current.windDirection)),
                         new ViewList.Item("Ощущаемая температура", String.format(Locale.getDefault(), "%d °C", current.feelTemperature)),
                 };
-                ViewList.draw(getActivity(), currentLayout.list, R.layout.layout_list_item, weatherList);
+                ViewList.draw(getActivity(), currentLayout.list, R.layout.layout_list_entry, weatherList);
 
-                DayList.draw(getActivity(), forecastLayout.list, R.layout.layout_forecast_entry, forecast);
+                ForecastList.draw(getActivity(), forecastLayout.list, R.layout.layout_forecast_entry, forecast);
 
                 contentLayout.setVisibility(View.VISIBLE);
                 swipeRefreshLayout.setRefreshing(false);

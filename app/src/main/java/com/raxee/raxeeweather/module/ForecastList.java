@@ -16,16 +16,25 @@ import com.raxee.raxeeweather.model.WeatherModel;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class DayList {
+public class ForecastList {
+    private static Adapter adapter = null;
+
     public static void draw(Context context, ListView list, int layout, WeatherModel[] data) {
-        list.setAdapter(new Adapter(context, layout, data));
+        if (adapter == null) {
+            adapter = new Adapter(context, layout, data);
+            list.setAdapter(adapter);
+        } else {
+            adapter.data = data;
+            adapter.notifyDataSetChanged();
+        }
+
         list.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, data.length * 49 - 1, context.getResources().getDisplayMetrics());
     }
 
     private static class Adapter extends ArrayAdapter<WeatherModel> {
         private final Context context;
         private final int layout;
-        private WeatherModel[] data = null;
+        public WeatherModel[] data = null;
 
         public Adapter(Context context, int layout, WeatherModel[] data) {
             super(context, layout, data);

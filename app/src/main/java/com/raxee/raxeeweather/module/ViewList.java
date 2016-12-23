@@ -13,8 +13,17 @@ import android.widget.TextView;
 import com.raxee.raxeeweather.R;
 
 public class ViewList {
+    private static ViewList.Adapter adapter = null;
+
     public static void draw(Context context, ListView list, int layout, ViewList.Item[] data) {
-        list.setAdapter(new Adapter(context, layout, data));
+        if (adapter == null) {
+            adapter = new ViewList.Adapter(context, layout, data);
+            list.setAdapter(adapter);
+        } else {
+            adapter.data = data;
+            adapter.notifyDataSetChanged();
+        }
+
         list.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, data.length * 49 - 1, context.getResources().getDisplayMetrics());
     }
 
