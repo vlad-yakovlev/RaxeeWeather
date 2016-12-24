@@ -3,27 +3,27 @@ package com.raxee.raxeeweather.activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.raxee.raxeeweather.R;
 import com.raxee.raxeeweather.fragment.WeatherFragment;
 import com.raxee.raxeeweather.manager.CityManager;
+import com.raxee.raxeeweather.manager.NavigationManager;
 import com.raxee.raxeeweather.model.CityModel;
+import com.raxee.raxeeweather.module.Keyboard;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private Toolbar toolbar;
-    private Drawer drawer;
+    private NavigationManager navigationManager;
+
+    private CityModel cityModel;
 
     private LinearLayout addCityLayout;
     private LinearLayout weatherLayout;
@@ -32,69 +32,71 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+
+        Keyboard.activity = this;
 
         addCityLayout = (LinearLayout)findViewById(R.id.form_add_city);
         weatherLayout = (LinearLayout)findViewById(R.id.layout_weather);
 
-        initToolbar();
-        initNavigationDrawer();
+        navigationManager = new NavigationManager(this, new NavigationManager.OnClickListener() {
+            @Override
+            public void onWeatherClick(CityModel cityModel) {
+                setWeather(cityModel);
+            }
+
+            @Override
+            public void onAddCityClick() {
+                setAddCity();
+            }
+        });
+        navigationManager.build();
+        if (savedInstanceState != null) {
+            List<String> cities = new ArrayList<String>();
+            for (CityModel cityModel : CityManager.get()) {
+                cities.add(cityModel.city);
+            }
+            navigationManager.select(Math.max(cities.indexOf(savedInstanceState.getString("city")), 0));
+        } else {
+            navigationManager.select(0);
+        }
     }
 
-    private void initToolbar() {
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    @Override
+    protected void onSaveInstanceState (Bundle outState) {
+        outState.putString("city", cityModel.city);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.city_delete:
+                CityManager.delete(cityModel.city);
+                navigationManager.build();
+                navigationManager.select(0);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setToolbarTitle(String title) {
-        ((TextView)findViewById(R.id.toolbar_title)).setText(title);
-    }
-
-    private void initNavigationDrawer() {
-        AccountHeader header = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.drawable.header)
-                .build();
-
-        drawer = new DrawerBuilder()
-                .withActivity(this)
-                .withAccountHeader(header)
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Integer i = (int)drawerItem.getIdentifier();
-                        CityModel[] cityModels = CityManager.get();
-
-                        if (i < cityModels.length) {
-                            setWeather(cityModels[i]);
-                        } else if (i == cityModels.length) {
-                            setAddCity();
-                        }
-
-                        return false;
-                    }
-                })
-                .build();
-
-        buildNavigationDriverList();
-        drawer.setSelection(0, true);
-    }
-
-    private Integer buildNavigationDriverList() {
-        drawer.removeAllItems();
-        CityModel[] cityModels = CityManager.get();
-        for (Integer i = 0; i < cityModels.length; i++) {
-            drawer.addItem(new PrimaryDrawerItem().withName(cityModels[i].city).withIdentifier(i));
-        }
-        drawer.addItem(new DividerDrawerItem());
-        drawer.addItem(new PrimaryDrawerItem().withName("Добавить город").withIdentifier(cityModels.length).withSelectable(false));
-
-        return cityModels.length;
+        getSupportActionBar().setTitle(title);
     }
 
     private void setWeather(CityModel cityModel) {
         addCityLayout.setVisibility(View.GONE);
         weatherLayout.setVisibility(View.VISIBLE);
         setToolbarTitle(cityModel.city);
+
+        this.cityModel = cityModel;
 
         final WeatherFragment weatherFragment = new WeatherFragment();
 
@@ -113,22 +115,20 @@ public class MainActivity extends AppCompatActivity {
         weatherLayout.setVisibility(View.GONE);
         setToolbarTitle("Добавление города");
 
-        ((TextView)findViewById(R.id.city)).setText("");
+        final TextView cityText = (TextView)findViewById(R.id.city_text);
+        final Button cityAdd = (Button)findViewById(R.id.city_add);
 
-        ((Button)findViewById(R.id.add_city)).setOnClickListener(new View.OnClickListener() {
+        cityText.setText("");
+        Keyboard.show(cityText);
+
+        cityAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hideSoftKeyboard();
-                CityManager.add(((TextView)findViewById(R.id.city)).getText().toString());
-                drawer.setSelection(buildNavigationDriverList() - 1, true);
+                Keyboard.hide();
+                CityManager.add(cityText.getText().toString());
+                navigationManager.build();
+                navigationManager.select(navigationManager.size() - 1);
             }
         });
-    }
-
-    public void hideSoftKeyboard() {
-        if(getCurrentFocus()!=null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        }
     }
 }

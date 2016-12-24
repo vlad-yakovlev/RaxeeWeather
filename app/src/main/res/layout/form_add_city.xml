@@ -6,13 +6,13 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/city"
+        android:id="@+id/city_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Название города"/>
 
     <Button
-        android:id="@+id/add_city"
+        android:id="@+id/city_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Добавить"/>
