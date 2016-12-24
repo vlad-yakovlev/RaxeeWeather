@@ -1,5 +1,6 @@
 package com.raxee.raxeeweather.manager;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -31,9 +32,21 @@ public class WeatherManager {
     }
 
     public static void load(String city, final OnCallbackListener onCallbackListener) {
-        String currentUrl = String.format("http://api.openweathermap.org/data/2.5/weather?q=%s&units=metric&appid=df27b084e5286716dee61c9f45f82a1a", city);
-        String forecastUrl = String.format("http://api.openweathermap.org/data/2.5/forecast?q=%s&units=metric&appid=df27b084e5286716dee61c9f45f82a1a", city);
-        new Task(city, onCallbackListener).execute(currentUrl, forecastUrl);
+
+        new Task(city, onCallbackListener).execute(getUrl("weather", city), getUrl("forecast", city));
+    }
+
+    private static String getUrl(String type, String city) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("http")
+                .authority("api.openweathermap.org")
+                .appendPath("data")
+                .appendPath("2.5")
+                .appendPath(type)
+                .appendQueryParameter("q", city)
+                .appendQueryParameter("units", "metric")
+                .appendQueryParameter("appid", "df27b084e5286716dee61c9f45f82a1a");
+        return builder.build().toString();
     }
 
     private static class DB {
@@ -43,6 +56,7 @@ public class WeatherManager {
                     .where("city = ?", city).and("type = ?", type)
                     .execute();
             WeatherModel[] weatherModels = weatherModelList.toArray(new WeatherModel[weatherModelList.size()]);
+
             return weatherModels;
         }
 

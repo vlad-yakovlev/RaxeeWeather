@@ -7,8 +7,10 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.raxee.raxeeweather.R;
@@ -57,7 +59,6 @@ public class WeatherFragment extends Fragment {
         Bundle arguments = this.getArguments();
         city = arguments.getString("city", null);
 
-        swipeRefreshLayout.setRefreshing(true);
         loadWeather();
 
         return view;

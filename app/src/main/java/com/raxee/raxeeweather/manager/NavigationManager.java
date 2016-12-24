@@ -1,10 +1,9 @@
 package com.raxee.raxeeweather.manager;
 
-import android.app.Activity;
-import android.content.Context;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -22,14 +21,10 @@ public class NavigationManager {
     private Integer length = 0;
 
     public static interface OnClickListener {
-        void onWeatherClick(CityModel cityModel);
-        void onAddCityClick();
+        void onClick(CityModel cityModel);
     }
 
-    public NavigationManager(final Activity activity, final OnClickListener onClickListener) {
-        /*setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);*/
-
+    public NavigationManager(final AppCompatActivity activity, Toolbar toolbar, final OnClickListener onClickListener) {
         AccountHeader header = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .withHeaderBackground(R.drawable.header)
@@ -46,23 +41,24 @@ public class NavigationManager {
                 Integer i = (int)drawerItem.getIdentifier();
                 CityModel[] cityModels = CityManager.get();
 
-                if (i < cityModels.length) {
-                    onClickListener.onWeatherClick(cityModels[i]);
-                } else if (i == cityModels.length) {
-                    onClickListener.onAddCityClick();
-                }
+                onClickListener.onClick(cityModels[i]);
 
                 return false;
             }
         });
 
-        drawer.setActionBarDrawerToggle(new ActionBarDrawerToggle(activity, drawer.getDrawerLayout(), 0, 0) {
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(activity, drawer.getDrawerLayout(), toolbar, 0, 0) {
             @Override
             public void onDrawerOpened(View view) {
                 super.onDrawerOpened(view);
                 Keyboard.hide();
             }
-        });
+        };
+
+        drawer.setActionBarDrawerToggle(actionBarDrawerToggle);
+
+        drawer.getDrawerLayout().addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
     }
 
     public void build() {
@@ -71,10 +67,6 @@ public class NavigationManager {
         for (Integer i = 0; i < cityModels.length; i++) {
             drawer.addItem(new PrimaryDrawerItem().withName(cityModels[i].city).withIdentifier(i));
         }
-        drawer.addItems(
-                new DividerDrawerItem(),
-                new PrimaryDrawerItem().withName("Добавить город").withIdentifier(cityModels.length)
-        );
 
         length = cityModels.length;
     }
@@ -85,5 +77,9 @@ public class NavigationManager {
 
     public void select(Integer id) {
         drawer.setSelection(id, true);
+    }
+
+    public void open() {
+        drawer.openDrawer();
     }
 }

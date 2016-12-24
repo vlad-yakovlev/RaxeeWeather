@@ -1,14 +1,17 @@
 package com.raxee.raxeeweather.activity;
 
+import android.content.DialogInterface;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import com.raxee.raxeeweather.R;
 import com.raxee.raxeeweather.fragment.WeatherFragment;
@@ -25,32 +28,26 @@ public class MainActivity extends AppCompatActivity {
 
     private CityModel cityModel;
 
-    private LinearLayout addCityLayout;
-    private LinearLayout weatherLayout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Keyboard.activity = this;
 
-        addCityLayout = (LinearLayout)findViewById(R.id.form_add_city);
-        weatherLayout = (LinearLayout)findViewById(R.id.layout_weather);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        navigationManager = new NavigationManager(this, new NavigationManager.OnClickListener() {
+        navigationManager = new NavigationManager(this, toolbar, new NavigationManager.OnClickListener() {
             @Override
-            public void onWeatherClick(CityModel cityModel) {
+            public void onClick(CityModel cityModel) {
                 setWeather(cityModel);
             }
-
-            @Override
-            public void onAddCityClick() {
-                setAddCity();
-            }
         });
+
         navigationManager.build();
+
         if (savedInstanceState != null) {
             List<String> cities = new ArrayList<String>();
             for (CityModel cityModel : CityManager.get()) {
@@ -60,6 +57,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             navigationManager.select(0);
         }
+
+        FloatingActionButton addCityButton = (FloatingActionButton)findViewById(R.id.add_city);
+
+        ((FloatingActionButton)findViewById(R.id.add_city)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setAddCity();
+            }
+        });
     }
 
     @Override
@@ -76,6 +82,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                navigationManager.open();
+                return true;
+
             case R.id.city_delete:
                 CityManager.delete(cityModel.city);
                 navigationManager.build();
@@ -87,14 +97,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolbarTitle(String title) {
-        getSupportActionBar().setTitle(title);
-    }
-
     private void setWeather(CityModel cityModel) {
-        addCityLayout.setVisibility(View.GONE);
-        weatherLayout.setVisibility(View.VISIBLE);
-        setToolbarTitle(cityModel.city);
+        getSupportActionBar().setTitle(cityModel.city);
 
         this.cityModel = cityModel;
 
@@ -111,24 +115,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setAddCity() {
-        addCityLayout.setVisibility(View.VISIBLE);
-        weatherLayout.setVisibility(View.GONE);
-        setToolbarTitle("Добавление города");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Добавление города");
 
-        final TextView cityText = (TextView)findViewById(R.id.city_text);
-        final Button cityAdd = (Button)findViewById(R.id.city_add);
+        final EditText input = new EditText(this);
+        input.setHint("Название города");
+        builder.setView(input);
 
-        cityText.setText("");
-        Keyboard.show(cityText);
-
-        cityAdd.setOnClickListener(new View.OnClickListener() {
+        builder.setPositiveButton("ОК", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Keyboard.hide();
-                CityManager.add(cityText.getText().toString());
+            public void onClick(DialogInterface dialog, int which) {
+                CityManager.add(input.getText().toString());
                 navigationManager.build();
                 navigationManager.select(navigationManager.size() - 1);
             }
         });
+
+        builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 }
