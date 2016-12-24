@@ -2,6 +2,7 @@ package com.raxee.raxeeweather.list;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Layout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,27 +13,33 @@ import android.widget.TextView;
 
 import com.raxee.raxeeweather.R;
 import com.raxee.raxeeweather.model.WeatherModel;
-import com.raxee.raxeeweather.manager.FontManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class ForecastList {
-    private static Adapter adapter = null;
+import static android.R.id.list;
 
-    public static void draw(Context context, ListView list, int layout, WeatherModel[] data) {
-        if (adapter == null) {
-            adapter = new Adapter(context, layout, data);
-            list.setAdapter(adapter);
-        } else {
-            adapter.data = data;
-            adapter.notifyDataSetChanged();
-        }
+public class ForecastList {
+    private Adapter adapter;
+    private Context context;
+    private ListView list;
+
+    public ForecastList(Context context, ListView list, int layout) {
+        this.context = context;
+        this.list = list;
+
+        adapter = new Adapter(context, layout, new WeatherModel[0]);
+        list.setAdapter(adapter);
+    }
+
+    public void set(WeatherModel[] data) {
+        adapter.data = data;
+        adapter.notifyDataSetChanged();
 
         list.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, data.length * 49 - 1, context.getResources().getDisplayMetrics());
     }
 
-    private static class Adapter extends ArrayAdapter<WeatherModel> {
+    private class Adapter extends ArrayAdapter<WeatherModel> {
         private final Context context;
         private final int layout;
         public WeatherModel[] data = null;
@@ -44,34 +51,18 @@ public class ForecastList {
             this.data = data;
         }
 
-        private class ItemView {
-            public TextView datetime;
-            public TextView icon;
-            public TextView temperature;
-
-            public ItemView(View view) {
-                datetime = (TextView)view.findViewById(R.id.datetime);
-                icon = (TextView)view.findViewById(R.id.icon);
-                temperature = (TextView)view.findViewById(R.id.temperature);
-            }
-        }
-
         @Override
         public View getView(int position, View convertView, final ViewGroup parent) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
             View view = inflater.inflate(layout, parent, false);
-            ItemView itemView = new ItemView(view);
 
             WeatherModel weather = data[position];
 
             SimpleDateFormat dateDormat = new SimpleDateFormat("EE HH:mm");
-            itemView.datetime.setText(String.format(Locale.getDefault(), "%S", dateDormat.format(weather.datetime)));
-
-            itemView.icon.setTypeface(FontManager.getTypeface(context, FontManager.WEATHERICONS));
-            itemView.icon.setText(context.getResources().getString(weather.iconResource));
-
-            itemView.temperature.setText(String.format(Locale.getDefault(), "%d", weather.temperature));
+            ((TextView)view.findViewById(R.id.datetime)).setText(String.format(Locale.getDefault(), "%S", dateDormat.format(weather.datetime)));
+            ((TextView)view.findViewById(R.id.icon)).setText(weather.icon);
+            ((TextView)view.findViewById(R.id.temperature)).setText(String.format(Locale.getDefault(), "%d", weather.temperature));
 
             return view;
         }

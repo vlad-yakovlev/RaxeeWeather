@@ -13,18 +13,23 @@ import android.widget.TextView;
 import com.raxee.raxeeweather.R;
 
 public class CurrentList {
-    private static CurrentList.Adapter adapter = null;
+    private Adapter adapter;
+    private Context context;
+    private ListView list;
 
-    public static void draw(Context context, ListView list, int layout, CurrentList.Item[] data) {
-        if (adapter == null) {
-            adapter = new CurrentList.Adapter(context, layout, data);
-            list.setAdapter(adapter);
-        } else {
-            adapter.data = data;
-            adapter.notifyDataSetChanged();
-        }
+    public CurrentList(Context context, ListView list, int layout) {
+        this.context = context;
+        this.list = list;
 
-        list.getLayoutParams().height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, data.length * 49 - 1, context.getResources().getDisplayMetrics());
+        adapter = new Adapter(context, layout, new CurrentList.Item[0]);
+        list.setAdapter(adapter);
+    }
+
+    public void set(CurrentList.Item[] data) {
+        adapter.data = data;
+        adapter.notifyDataSetChanged();
+
+        list.getLayoutParams().height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, data.length * 49 - 1, context.getResources().getDisplayMetrics());
     }
 
     public static class Item {
@@ -37,7 +42,7 @@ public class CurrentList {
         }
     }
 
-    private static class Adapter extends ArrayAdapter<Item> {
+    private class Adapter extends ArrayAdapter<Item> {
         private final Context context;
         private final int layout;
         private Item[] data = null;
@@ -48,28 +53,16 @@ public class CurrentList {
             this.layout = layout;
             this.data = data;
         }
-
-        private static class ItemView {
-            public TextView name;
-            public TextView value;
-
-            public ItemView(View view) {
-                name = (TextView)view.findViewById(R.id.name);
-                value = (TextView)view.findViewById(R.id.value);
-            }
-        }
-
         @Override
         public View getView(int position, View convertView, final ViewGroup parent) {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
             View view = inflater.inflate(layout, parent, false);
-            ItemView itemView = new ItemView(view);
 
             Item item = data[position];
 
-            itemView.name.setText(item.name);
-            itemView.value.setText(item.value);
+            ((TextView)view.findViewById(R.id.name)).setText(item.name);
+            ((TextView)view.findViewById(R.id.value)).setText(item.value);
 
             return view;
         }

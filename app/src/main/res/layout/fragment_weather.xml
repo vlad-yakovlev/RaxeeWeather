@@ -43,7 +43,7 @@
                         android:paddingBottom="1dp"
                         android:background="@drawable/current_weather_header">
 
-                        <TextView
+                        <com.joanzapata.iconify.widget.IconTextView
                             android:id="@+id/temperature"
                             android:layout_width="0dp"
                             android:layout_weight=".5"
@@ -52,7 +52,7 @@
                             android:textAlignment="viewStart"
                             android:textColor="?android:attr/textColorPrimary" />
 
-                        <TextView
+                        <com.joanzapata.iconify.widget.IconTextView
                             android:id="@+id/icon"
                             android:layout_width="0dp"
                             android:layout_weight=".5"

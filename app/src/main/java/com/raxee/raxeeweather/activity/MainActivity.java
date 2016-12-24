@@ -45,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
+    private void setToolbarTitle(String title) {
+        ((TextView)findViewById(R.id.toolbar_title)).setText(title);
+    }
+
     private void initNavigationDrawer() {
         AccountHeader header = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private void setWeather(CityModel cityModel) {
         addCityLayout.setVisibility(View.GONE);
         weatherLayout.setVisibility(View.VISIBLE);
+        setToolbarTitle(cityModel.city);
 
         final WeatherFragment weatherFragment = new WeatherFragment();
 
@@ -106,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
     private void setAddCity() {
         addCityLayout.setVisibility(View.VISIBLE);
         weatherLayout.setVisibility(View.GONE);
+        setToolbarTitle("Добавление города");
+
+        ((TextView)findViewById(R.id.city)).setText("");
 
         ((Button)findViewById(R.id.add_city)).setOnClickListener(new View.OnClickListener() {
             @Override

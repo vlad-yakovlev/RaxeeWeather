@@ -33,8 +33,8 @@ public class WeatherModel extends Model implements Serializable {
     @Column(name = "windDirection")
     public String windDirection;
 
-    @Column(name = "iconResource")
-    public Integer iconResource;
+    @Column(name = "icon")
+    public String icon;
 
     @Column(name = "feelTemperature")
     public Integer feelTemperature;
@@ -66,7 +66,7 @@ public class WeatherModel extends Model implements Serializable {
             windDirection = dataWind.has("deg") ? getWindDirectionByDegree(dataWind.getDouble("deg")) : "";
 
             JSONObject dataWeather = data.getJSONArray("weather").getJSONObject(0);
-            iconResource = getIconResourceByID(dataWeather.getString("icon"));
+            icon = getIcon(dataWeather.getString("icon"));
 
             feelTemperature = (int)Math.round(getFeelTemperature(dataMain.getDouble("temp"), dataMain.getDouble("humidity"), dataMain.getDouble("pressure"), dataWind.getDouble("speed")));
         } catch (JSONException error) {
@@ -84,38 +84,38 @@ public class WeatherModel extends Model implements Serializable {
     }
 
     private String getWindDirectionByDegree(Double degree) {
-        String[] directions = { "↑", "↗", "→", "↘", "↓", "↙", "←", "↖" };
-        return directions[(int)(Math.round(degree / 8) % 8)];
+        String[] directions = { "{fa-arrow-up}", "{fa-arrow-right}", "{fa-arrow-down}", "{fa-arrow-left}" };
+        return directions[(int)(Math.round(degree / 4) % 4)];
     }
 
-    private Integer getIconResourceByID(String id) {
+    private String getIcon(String id) {
         switch (id) {
-            case "01d": return R.string.wi_day_sunny;
-            case "01n": return R.string.wi_stars;
+            case "01d": return "{wi_day_sunny}";
+            case "01n": return "{wi_stars}";
 
-            case "02d": return R.string.wi_day_cloudy;
-            case "02n": return R.string.wi_night_alt_cloudy;
+            case "02d": return "{wi_day_cloudy}";
+            case "02n": return "{wi_night_alt_cloudy}";
 
-            case "03d": return R.string.wi_cloud;
-            case "03n": return R.string.wi_cloud;
+            case "03d": return "{wi_cloud}";
+            case "03n": return "{wi_cloud}";
 
-            case "04d": return R.string.wi_cloudy;
-            case "04n": return R.string.wi_cloudy;
+            case "04d": return "{wi_cloudy}";
+            case "04n": return "{wi_cloudy}";
 
-            case "09d": return R.string.wi_rain;
-            case "09n": return R.string.wi_rain;
+            case "09d": return "{wi_rain}";
+            case "09n": return "{wi_rain}";
 
-            case "10d": return R.string.wi_day_rain;
-            case "10n": return R.string.wi_night_alt_rain;
+            case "10d": return "{wi_day_rain}";
+            case "10n": return "{wi_night_alt_rain}";
 
-            case "11d": return R.string.wi_thunderstorm;
-            case "11n": return R.string.wi_thunderstorm;
+            case "11d": return "{wi_thunderstorm}";
+            case "11n": return "{wi_thunderstorm}";
 
-            case "13d": return R.string.wi_snow;
-            case "13n": return R.string.wi_snow;
+            case "13d": return "{wi_snow}";
+            case "13n": return "{wi_snow}";
 
-            case "50d": return R.string.wi_fog;
-            case "50n": return R.string.wi_fog;
+            case "50d": return "{wi_fog}";
+            case "50n": return "{wi_fog}";
 
             default: return null;
         }
