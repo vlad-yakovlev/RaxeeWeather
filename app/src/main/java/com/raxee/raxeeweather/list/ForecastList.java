@@ -1,4 +1,4 @@
-package com.raxee.raxeeweather.module;
+package com.raxee.raxeeweather.list;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.raxee.raxeeweather.R;
 import com.raxee.raxeeweather.model.WeatherModel;
+import com.raxee.raxeeweather.manager.FontManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;

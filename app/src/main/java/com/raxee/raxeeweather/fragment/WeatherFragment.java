@@ -14,9 +14,9 @@ import android.widget.TextView;
 import com.raxee.raxeeweather.R;
 import com.raxee.raxeeweather.manager.WeatherManager;
 import com.raxee.raxeeweather.model.WeatherModel;
-import com.raxee.raxeeweather.module.ForecastList;
-import com.raxee.raxeeweather.module.FontManager;
-import com.raxee.raxeeweather.module.ViewList;
+import com.raxee.raxeeweather.list.ForecastList;
+import com.raxee.raxeeweather.manager.FontManager;
+import com.raxee.raxeeweather.list.CurrentList;
 
 import java.util.Locale;
 
@@ -36,7 +36,7 @@ public class WeatherFragment extends Fragment {
             CardView layout = (CardView)view.findViewById(R.id.current_layout);
             temperature = (TextView)layout.findViewById(R.id.temperature);
             icon = (TextView)layout.findViewById(R.id.icon);
-            list = (ListView)layout.findViewById(R.id.list);
+            list = (ListView)layout.findViewById(R.id.current_list);
         }
     }
 
@@ -45,7 +45,7 @@ public class WeatherFragment extends Fragment {
 
         public ForecastLayout(View view) {
             CardView layout = (CardView)view.findViewById(R.id.forecast_layout);
-            list = (ListView)layout.findViewById(R.id.day_list);
+            list = (ListView)layout.findViewById(R.id.forecast_list);
         }
     }
 
@@ -71,6 +71,7 @@ public class WeatherFragment extends Fragment {
         Bundle arguments = this.getArguments();
         city = arguments.getString("city", null);
 
+        swipeRefreshLayout.setRefreshing(true);
         loadWeather();
 
         return view;
@@ -83,15 +84,15 @@ public class WeatherFragment extends Fragment {
                 currentLayout.icon.setTypeface(FontManager.getTypeface(getActivity(), FontManager.WEATHERICONS));
                 currentLayout.icon.setText(getResources().getString(current.iconResource));
 
-                ViewList.Item[] weatherList = {
-                        new ViewList.Item("Влажность вохдуха", String.format(Locale.getDefault(), "%d %%", current.humidity)),
-                        new ViewList.Item("Атмосферное давление", String.format(Locale.getDefault(), "%d мм рт.ст.", current.pressure)),
-                        new ViewList.Item("Ветер", String.format(Locale.getDefault(), "%d м/с %s", current.windSpeed, current.windDirection)),
-                        new ViewList.Item("Ощущаемая температура", String.format(Locale.getDefault(), "%d °C", current.feelTemperature)),
+                CurrentList.Item[] weatherList = {
+                        new CurrentList.Item("Влажность вохдуха", String.format(Locale.getDefault(), "%d %%", current.humidity)),
+                        new CurrentList.Item("Атмосферное давление", String.format(Locale.getDefault(), "%d мм рт.ст.", current.pressure)),
+                        new CurrentList.Item("Ветер", String.format(Locale.getDefault(), "%d м/с %s", current.windSpeed, current.windDirection)),
+                        new CurrentList.Item("Ощущаемая температура", String.format(Locale.getDefault(), "%d °C", current.feelTemperature)),
                 };
-                ViewList.draw(getActivity(), currentLayout.list, R.layout.layout_list_entry, weatherList);
+                CurrentList.draw(getActivity(), currentLayout.list, R.layout.entry_current, weatherList);
 
-                ForecastList.draw(getActivity(), forecastLayout.list, R.layout.layout_forecast_entry, forecast);
+                ForecastList.draw(getActivity(), forecastLayout.list, R.layout.entry_forecast, forecast);
 
                 contentLayout.setVisibility(View.VISIBLE);
                 swipeRefreshLayout.setRefreshing(false);

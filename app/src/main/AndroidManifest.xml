@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".ApplicationWeather"
+        android:name=".application.WeatherApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="RaxeeWeather"
@@ -20,7 +20,7 @@
             android:value="1" />
         <meta-data
             android:name="AA_MODELS"
-            android:value="com.raxee.raxeeweather.model.WeatherModel" />
+            android:value="com.raxee.raxeeweather.model.WeatherModel, com.raxee.raxeeweather.model.CityModel" />
 
         <activity android:name=".activity.MainActivity">
             <intent-filter>

@@ -4,20 +4,20 @@
     android:id="@+id/swiperefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.raxee.raxeeweather.fragment.WeatherFragment">
+    tools:context=".fragment.WeatherFragment">
 
     <ScrollView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.raxee.raxeeweather.activity.MainActivity">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="4dp"
             android:orientation="vertical"
             android:visibility="gone">
 
@@ -64,7 +64,7 @@
                     </LinearLayout>
 
                     <ListView
-                        android:id="@+id/list"
+                        android:id="@+id/current_list"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:listSelector="@android:color/transparent"
@@ -82,7 +82,7 @@
                 card_view:cardUseCompatPadding="true">
 
                 <ListView
-                    android:id="@+id/day_list"
+                    android:id="@+id/forecast_list"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:listSelector="@android:color/transparent"

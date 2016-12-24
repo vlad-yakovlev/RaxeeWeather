@@ -1,4 +1,4 @@
-package com.raxee.raxeeweather.module;
+package com.raxee.raxeeweather.manager;
 
 import android.content.Context;
 import android.graphics.Typeface;

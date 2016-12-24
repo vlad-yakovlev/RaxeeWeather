@@ -1,4 +1,4 @@
-package com.raxee.raxeeweather.module;
+package com.raxee.raxeeweather.list;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,12 +12,12 @@ import android.widget.TextView;
 
 import com.raxee.raxeeweather.R;
 
-public class ViewList {
-    private static ViewList.Adapter adapter = null;
+public class CurrentList {
+    private static CurrentList.Adapter adapter = null;
 
-    public static void draw(Context context, ListView list, int layout, ViewList.Item[] data) {
+    public static void draw(Context context, ListView list, int layout, CurrentList.Item[] data) {
         if (adapter == null) {
-            adapter = new ViewList.Adapter(context, layout, data);
+            adapter = new CurrentList.Adapter(context, layout, data);
             list.setAdapter(adapter);
         } else {
             adapter.data = data;
